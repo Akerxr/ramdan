@@ -2,117 +2,169 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مصباح علاء الدين السحري ✨</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Code of Love | ✨</title>
     <style>
         :root { --magic-blue: #020617; --gold: #ffd700; --sky: #38bdf8; }
         
-        body { margin: 0; padding: 0; background: var(--magic-blue); font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* مطر النجوم */
-        .stars-container { position: fixed; width: 100%; height: 100%; z-index: -2; background: radial-gradient(ellipse at bottom, #0f172a 0%, #020617 100%); }
-        .star { position: absolute; background: white; border-radius: 50%; opacity: 0.6; animation: fall linear infinite; }
-        @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
-
-        /* الجني الطائر */
-        .genie { position: fixed; right: 20px; top: 15%; width: 180px; z-index: 5; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.7)) drop-shadow(0 0 15px var(--sky)); animation: floatGenie 4s ease-in-out infinite; pointer-events: none; }
-        @keyframes floatGenie { 0%, 100% { transform: translateY(0) rotate(5deg); } 50% { transform: translateY(-30px) rotate(-5deg); } }
-
-        .container { display: flex; justify-content: center; align-items: center; min-height: 100vh; position: relative; z-index: 2; }
-        .box { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(15px); padding: 30px; border-radius: 30px; border: 1px solid var(--sky); text-align: center; width: 90%; max-width: 420px; position: relative; overflow: hidden; }
-
-        /* الكلمات */
-        .lyrics-box { height: 90px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-        .lyric-line { color: #334155; font-size: 22px; font-weight: bold; display: none; }
-        .lyric-line.active { display: block; color: var(--sky); text-shadow: 0 0 20px var(--sky); animation: glowUp 0.8s ease-out; }
-        @keyframes glowUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* منطقة المصباح والدخان */
-        .lamp-area { position: relative; width: 220px; margin: 0 auto; cursor: pointer; touch-action: none; z-index: 10; }
-        .lamp-img { width: 100%; transition: 0.2s; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transform: rotateX(15deg); }
-        
-        /* تأثير الدخان الأبيض (التعديل القاتل هنا) */
-        #smoke {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 500px; /* حجم كبير يغطي الصندوق */
-            opacity: 0;
-            transition: all 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
-            pointer-events: none;
-            z-index: 20;
-            filter: brightness(1.5) contrast(1.2); /* تفتيح الدخان */
+        body { 
+            margin: 0; padding: 0; background: var(--magic-blue); 
+            font-family: 'Segoe UI', Tahoma, sans-serif; 
+            overflow: hidden; color: white; height: 100vh; width: 100vw;
         }
 
-        #secret-msg { display: none; font-size: 18px; line-height: 1.8; color: white; padding: 20px; border-radius: 20px; background: rgba(255,255,255,0.05); border-right: 6px solid var(--gold); animation: fadeIn 1.5s; }
+        /* مطر النجوم */
+        .stars-container {
+            position: fixed; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(ellipse at bottom, #0f172a 0%, #020617 100%);
+        }
+        .star {
+            position: absolute; background: white; border-radius: 50%;
+            opacity: 0.5; animation: fall linear infinite;
+        }
+        @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
+
+        /* شاشة الدخول (تاخد الشاشة كلها) */
+        #login-screen {
+            position: fixed; inset: 0; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 100;
+            background: var(--magic-blue); transition: 0.8s ease;
+        }
+
+        .login-box {
+            width: 85%; text-align: center; padding: 40px 20px;
+            border-radius: 25px; border: 1px solid var(--sky);
+            background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px);
+        }
+
+        input {
+            width: 90%; padding: 15px; margin: 20px 0; border-radius: 15px;
+            border: 1px solid var(--sky); background: rgba(255,255,255,0.1);
+            color: white; text-align: center; font-size: 18px; outline: none;
+        }
+
+        button {
+            width: 90%; padding: 15px; border-radius: 15px; border: none;
+            background: var(--sky); color: white; font-weight: bold;
+            font-size: 18px; box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        }
+
+        /* الصفحة الرئيسية (مخفية في الأول) */
+        #main-content {
+            display: none; height: 100vh; width: 100vw;
+            flex-direction: column; align-items: center; justify-content: space-between;
+            padding: 40px 20px; opacity: 0; transition: 1s ease;
+        }
+
+        /* الجني الطائر - مقاس موبايل */
+        .genie {
+            position: absolute; top: 10%; right: 5%; width: 140px;
+            filter: drop-shadow(0 0 15px var(--sky));
+            animation: floatGenie 4s ease-in-out infinite; z-index: 10;
+        }
+        @keyframes floatGenie {
+            0%, 100% { transform: translateY(0) rotate(5deg); }
+            50% { transform: translateY(-30px) rotate(-5deg); }
+        }
+
+        /* كلمات الأغنية */
+        .lyrics-box { height: 60px; text-align: center; width: 100%; margin-top: 20px; }
+        .lyric-line { font-size: 20px; font-weight: bold; display: none; color: var(--sky); text-shadow: 0 0 15px var(--sky); }
+        .lyric-line.active { display: block; animation: zoomIn 0.8s forwards; }
+
+        /* الفانوس والدخان */
+        .lamp-area { position: relative; width: 220px; margin: 20px auto; z-index: 20; }
+        .lamp-img { width: 100%; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transform: rotateX(15deg); transition: 0.2s; }
+        
+        #smoke {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 450px; opacity: 0; transition: 1.2s ease-out; pointer-events: none; z-index: 30;
+        }
+
+        #secret-msg {
+            display: none; padding: 25px; border-radius: 20px; width: 90%;
+            background: rgba(255,255,255,0.05); border-right: 5px solid var(--gold);
+            line-height: 1.8; font-size: 18px; animation: fadeIn 1s forwards;
+        }
+
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="stars-container" id="stars"></div>
-    <img src="https://files.catbox.moe/z9lpmv.png" class="genie">
-
+    
     <audio id="song" loop>
         <source src="https://files.catbox.moe/3x0al8.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="container">
-        <div id="login-screen" class="box" style="z-index: 100;">
-            <h2 style="color:var(--sky)">سحر البدايات ✨</h2>
-            <input type="text" id="pass" placeholder="كلمة السر" style="padding:12px; width:80%; border-radius:10px; border:1px solid var(--sky); background:transparent; color:white; text-align:center; margin-bottom:15px;">
-            <br>
-            <button onclick="start()" style="background:var(--sky); color:white; border:none; padding:12px 30px; border-radius:10px; cursor:pointer; font-weight:bold;">افتح يا سمسم</button>
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 style="color:var(--sky); margin:0;">Code of Love</h2>
+            <p style="font-size: 14px; opacity: 0.8;">ادخل رمز العبور لعالمنا السحري</p>
+            <input type="text" id="pass" placeholder="Password">
+            <button onclick="unlock()">فتح المصباح ✨</button>
+        </div>
+    </div>
+
+    <div id="main-content">
+        <img src="https://files.catbox.moe/z9lpmv.png" class="genie">
+        
+        <div class="lyrics-box">
+            <span id="l1" class="lyric-line">ورجعيني لحلاوه البدايات</span>
+            <span id="l2" class="lyric-line">نعيد ونزود الحكايات</span>
+            <span id="l3" class="lyric-line">واشوفها واقفه قدامي</span>
+            <span id="l4" class="lyric-line">وسمعيني صوتها مره كمان</span>
+            <span id="l5" class="lyric-line">جيبيها صدفه في الاحلام</span>
+            <span id="l6" class="lyric-line">واخدها في حضني من تاني</span>
         </div>
 
-        <div id="main-content" class="box">
-            <div class="lyrics-box">
-                <span id="l1" class="lyric-line">ورجعيني لحلاوه البدايات</span>
-                <span id="l2" class="lyric-line">نعيد ونزود الحكايات</span>
-                <span id="l3" class="lyric-line">واشوفها واقفه قدامي</span>
-                <span id="l4" class="lyric-line">وسمعيني صوتها مره كمان</span>
-                <span id="l5" class="lyric-line">جيبيها صدفه في الاحلام</span>
-                <span id="l6" class="lyric-line">واخدها في حضني من تاني</span>
-            </div>
+        <div class="lamp-area" id="rub-area" ontouchmove="doRub(event)">
+            <img src="https://files.catbox.moe/898v62.png" class="lamp-img" id="lamp">
+            <img src="https://www.pngarts.com/files/4/Smoke-PNG-Transparent-Image.png" id="smoke">
+            <p id="hint" style="color:var(--gold); margin-top:15px; font-size:14px;">ادعك المصباح ليظهر الجني 🧞‍♂️</p>
+        </div>
 
-            <div class="lamp-area" id="rub-area" onmousemove="doRub()" ontouchmove="doRub()">
-                <img src="https://files.catbox.moe/898v62.png" class="lamp-img" id="lamp">
-                <img src="https://www.pngarts.com/files/4/Smoke-PNG-Transparent-Image.png" id="smoke">
-                <p id="hint" style="color:var(--gold); margin-top: 10px;">ادعك المصباح ليظهر الجني! 🧞‍♂️</p>
-            </div>
-
-            <div id="secret-msg">
-                <b>رسالة الجني السحرية ❤️</b><br>
-                كل سنة وأنتي منورة دنيتي.. رمضان والعيد أحلى بكتير وأنتي في حياتي. بحبك!
-            </div>
+        <div id="secret-msg">
+            <b style="color:var(--gold)">رسالة الجني ❤️</b><br>
+            كل سنة وأنتي منورة دنيتي.. رمضان أحلى بيكي بكتير يا ست البنات. بحبك!
         </div>
     </div>
 
     <script>
-        // مطر النجوم
-        const starsBox = document.getElementById('stars');
-        for (let i = 0; i < 70; i++) {
+        // توليد النجوم
+        for (let i = 0; i < 60; i++) {
             let star = document.createElement('div');
             star.className = 'star';
             star.style.left = Math.random() * 100 + 'vw';
             star.style.width = star.style.height = Math.random() * 3 + 'px';
             star.style.animationDuration = Math.random() * 2 + 2 + 's';
-            starsBox.appendChild(star);
+            document.getElementById('stars').appendChild(star);
         }
 
         const song = document.getElementById('song');
         let rubs = 0;
         let isDone = false;
 
-        function start() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-            song.play();
-            showLyrics();
+        function unlock() {
+            // تأثير الانتقال بين الصفحات
+            const login = document.getElementById('login-screen');
+            const main = document.getElementById('main-content');
+            
+            login.style.opacity = '0';
+            setTimeout(() => {
+                login.style.display = 'none';
+                main.style.display = 'flex';
+                setTimeout(() => main.style.opacity = '1', 50);
+                song.play();
+                startLyrics();
+            }, 800);
         }
 
-        function showLyrics() {
+        function startLyrics() {
             const sequence = [1000, 5000, 9500, 13500, 18000, 22500];
             const run = () => {
                 sequence.forEach((ms, i) => {
@@ -126,29 +178,23 @@
             setInterval(run, 26000);
         }
 
-        function doRub() {
+        function doRub(e) {
             if(isDone) return;
             rubs++;
             const lamp = document.getElementById('lamp');
             const smoke = document.getElementById('smoke');
             
-            // اهتزاز خفيف أثناء الدعك
-            lamp.style.transform = `rotateX(15deg) scale(1.02) rotate(${rubs % 2 === 0 ? 3 : -3}deg)`;
+            lamp.style.transform = `rotateX(15deg) scale(1.05) rotate(${rubs % 2 === 0 ? 5 : -5}deg)`;
 
             if(rubs > 40) {
                 isDone = true;
-                // تفعيل الانفجار الدخاني
                 smoke.style.opacity = '1';
-                smoke.style.transform = 'translate(-50%, -50%) scale(2)';
+                smoke.style.transform = 'translate(-50%, -50%) scale(1.5)';
                 
                 setTimeout(() => {
-                    document.getElementById('rub-area').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('rub-area').style.display = 'none';
-                        document.getElementById('secret-msg').style.display = 'block';
-                        smoke.style.opacity = '0'; // إخفاء الدخان بعد الظهور
-                    }, 500);
-                }, 1000);
+                    document.getElementById('rub-area').style.display = 'none';
+                    document.getElementById('secret-msg').style.display = 'block';
+                }, 1200);
             }
         }
     </script>
