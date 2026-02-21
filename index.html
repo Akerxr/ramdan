@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white;
         }
 
-        /* 1. مطر النجوم في الخلفية */
+        /* 1. مطر النجوم في الخلفية (تسقط لوحدها) */
         .stars-container {
             position: fixed; width: 100%; height: 100%; z-index: -2;
             background: radial-gradient(ellipse at bottom, #0f172a 0%, #020617 100%);
@@ -28,7 +28,7 @@
 
         /* 2. الجني الطائر 3D */
         .genie {
-            position: fixed; right: 20px; top: 15%; width: 220px; z-index: 5;
+            position: fixed; right: 20px; top: 15%; width: 200px; z-index: 5;
             filter: drop-shadow(0 15px 25px rgba(0,0,0,0.7)) drop-shadow(0 0 15px var(--sky));
             animation: floatGenie 4s ease-in-out infinite;
             pointer-events: none;
@@ -40,11 +40,7 @@
         }
 
         .container { display: flex; justify-content: center; align-items: center; min-height: 100vh; position: relative; z-index: 2; }
-        .box { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(15px); padding: 30px; border-radius: 30px; border: 1px solid var(--sky); text-align: center; width: 90%; max-width: 420px; box-shadow: 0 0 40px rgba(56, 189, 248, 0.3); }
-
-        /* شاشة الدخول */
-        #login-screen input { padding: 12px; border-radius: 12px; border: 1px solid var(--sky); width: 85%; margin-bottom: 15px; background: rgba(255,255,255,0.1); color: white; text-align: center; font-size: 18px; outline: none; }
-        #login-screen button { background: var(--sky); color: white; border: none; padding: 12px 35px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 18px; box-shadow: 0 0 15px var(--sky); }
+        .box { background: rgba(0, 0, 0, 0.65); backdrop-filter: blur(15px); padding: 30px; border-radius: 30px; border: 1px solid var(--sky); text-align: center; width: 90%; max-width: 420px; box-shadow: 0 0 40px rgba(56, 189, 248, 0.3); }
 
         #main-content { display: none; }
 
@@ -55,14 +51,14 @@
         @keyframes glowUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* 4. المصباح 3D والتفاعل */
-        .lamp-area { position: relative; width: 250px; margin: 0 auto; cursor: pointer; touch-action: none; perspective: 1000px; }
+        .lamp-area { position: relative; width: 230px; margin: 0 auto; cursor: pointer; touch-action: none; perspective: 1000px; }
         .lamp-img { 
             width: 100%; transition: 0.2s; 
             filter: drop-shadow(0 20px 30px rgba(0,0,0,0.8)) drop-shadow(0 0 10px var(--gold));
-            transform: rotateX(15deg); /* ميل 3D للمصباح */
+            transform: rotateX(15deg);
         }
         .smoke-effect {
-            position: absolute; top: -30px; left: 50%; transform: translateX(-50%) scale(0);
+            position: absolute; top: -40px; left: 50%; transform: translateX(-50%) scale(0);
             width: 400px; opacity: 0; transition: 1.5s ease-out; pointer-events: none; z-index: 10;
         }
 
@@ -80,7 +76,7 @@
     
     <img src="https://files.catbox.moe/z9lpmv.png" class="genie">
 
-    <audio id="song">
+    <audio id="song" loop>
         <source src="https://files.catbox.moe/3x0al8.mp3" type="audio/mpeg">
     </audio>
 
@@ -88,9 +84,9 @@
         <div id="login-screen" class="box">
             <h1 style="color:var(--sky); font-size: 26px;">سحر البدايات ✨</h1>
             <p>أدخل الباسورد لفتح عالمك الخاص</p>
-            <input type="text" id="pass" placeholder="00-00-0000">
+            <input type="text" id="pass" placeholder="00-00-0000" style="padding:12px; border-radius:12px; border:1px solid var(--sky); width:85%; margin-bottom:15px; background:transparent; color:white; text-align:center;">
             <br>
-            <button onclick="start()">افتح يا سمسم</button>
+            <button onclick="start()" style="background:var(--sky); color:white; border:none; padding:12px 35px; border-radius:12px; cursor:pointer; font-weight:bold; font-size:18px;">افتح يا سمسم</button>
         </div>
 
         <div id="main-content" class="box">
@@ -117,7 +113,7 @@
     </div>
 
     <script>
-        // توليد مطر النجوم التلقائي
+        // توليد مطر النجوم التلقائي في الخلفية
         const starsBox = document.getElementById('stars');
         for (let i = 0; i < 90; i++) {
             let star = document.createElement('div');
@@ -141,24 +137,31 @@
         }
 
         function showLyrics() {
+            // توقيت كلمات تامر عاشور المظبوطة بالثانية
             const sequence = [1000, 5000, 9500, 13500, 18000, 22500];
-            sequence.forEach((ms, index) => {
-                setTimeout(() => {
-                    document.querySelectorAll('.lyric-line').forEach(l => l.classList.remove('active'));
-                    const line = document.getElementById('l' + (index + 1));
-                    if(line) line.classList.add('active');
-                }, ms);
-            });
+            const runSequence = () => {
+                sequence.forEach((ms, index) => {
+                    setTimeout(() => {
+                        document.querySelectorAll('.lyric-line').forEach(l => l.classList.remove('active'));
+                        const line = document.getElementById('l' + (index + 1));
+                        if(line) line.classList.add('active');
+                    }, ms);
+                });
+            };
+            
+            runSequence();
+            // تكرار الكلمات مع تكرار الأغنية (اللوب)
+            setInterval(runSequence, 26000); 
         }
 
         function doRub() {
             if(isDone) return;
             rubs++;
             const lamp = document.getElementById('lamp');
-            // تأثير الاهتزاز واللمعان عند الدعك
+            // اهتزاز وتفاعل المصباح عند الدعك
             lamp.style.transform = `rotateX(15deg) scale(1.05) rotate(${rubs % 2 === 0 ? 4 : -4}deg)`;
             
-            if(rubs > 45) {
+            if(rubs > 45) { // عدد الدعكات
                 isDone = true;
                 const smoke = document.getElementById('smoke');
                 smoke.style.opacity = '1';
