@@ -12,7 +12,7 @@
             font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white;
         }
 
-        /* سماء النجوم المتحركة (بتنزل من السما) */
+        /* 1. مطر النجوم في الخلفية (تسقط من الأعلى) */
         .stars-container {
             position: fixed; width: 100%; height: 100%; z-index: -2;
             background: radial-gradient(ellipse at bottom, #0f172a 0%, #020617 100%);
@@ -26,44 +26,43 @@
             to { transform: translateY(110vh); }
         }
 
-        /* جني ديزني الطائف */
+        /* 2. الجني الطائر (بيطوف في الجنب) */
         .genie {
-            position: fixed; right: -20px; top: 15%; width: 220px; z-index: 1;
-            animation: float 4s ease-in-out infinite;
+            position: fixed; right: 10px; top: 10%; width: 180px; z-index: 1;
+            animation: floatGenie 4s ease-in-out infinite;
             filter: drop-shadow(0 0 15px var(--sky));
             pointer-events: none;
         }
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(3deg); }
-            50% { transform: translateY(-35px) rotate(-3deg); }
+        @keyframes floatGenie {
+            0%, 100% { transform: translateY(0) rotate(5deg); }
+            50% { transform: translateY(-40px) rotate(-5deg); }
         }
 
         .container { display: flex; justify-content: center; align-items: center; min-height: 100vh; position: relative; z-index: 2; }
-        .box { background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(12px); padding: 30px; border-radius: 30px; border: 1px solid var(--sky); text-align: center; width: 90%; max-width: 450px; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+        .box { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(15px); padding: 30px; border-radius: 30px; border: 1px solid var(--sky); text-align: center; width: 90%; max-width: 420px; box-shadow: 0 0 30px rgba(56, 189, 248, 0.2); }
 
         /* شاشة الدخول */
-        #login-screen h2 { color: var(--sky); text-shadow: 0 0 10px var(--sky); }
         #login-screen input { padding: 12px; border-radius: 12px; border: 1px solid var(--sky); width: 85%; margin-bottom: 15px; background: rgba(255,255,255,0.1); color: white; text-align: center; font-size: 18px; outline: none; }
-        #login-screen button { background: var(--sky); color: white; border: none; padding: 12px 35px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 18px; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4); }
+        #login-screen button { background: var(--sky); color: white; border: none; padding: 12px 35px; border-radius: 12px; cursor: pointer; font-weight: bold; font-size: 18px; }
 
         #main-content { display: none; }
 
-        /* كلمات الأغنية كاملة بالتوقيت */
-        .lyrics-box { height: 100px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
-        .lyric-line { color: #334155; font-size: 24px; font-weight: bold; display: none; transition: 0.5s; }
+        /* 3. كلمات الأغنية كاملة (ظهور سينمائي) */
+        .lyrics-box { height: 80px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
+        .lyric-line { color: #334155; font-size: 22px; font-weight: bold; display: none; transition: 0.5s; }
         .lyric-line.active { display: block; color: var(--sky); text-shadow: 0 0 20px var(--sky); animation: zoomIn 0.8s ease-out; }
         @keyframes zoomIn { from { opacity: 0; transform: scale(0.5); } to { opacity: 1; transform: scale(1); } }
 
-        /* الفانوس الـ 3D والدخان */
-        .lamp-area { position: relative; width: 250px; margin: 0 auto; cursor: pointer; touch-action: none; }
-        .lamp-img { width: 100%; transition: 0.3s; filter: drop-shadow(0 0 15px var(--gold)); }
+        /* 4. الفانوس التفاعلي والدخان */
+        .lamp-area { position: relative; width: 220px; margin: 0 auto; cursor: pointer; touch-action: none; }
+        .lamp-img { width: 100%; transition: 0.2s; filter: drop-shadow(0 0 15px var(--gold)); }
         .smoke-effect {
-            position: absolute; top: -20px; left: 50%; transform: translateX(-50%) scale(0);
+            position: absolute; top: -30px; left: 50%; transform: translateX(-50%) scale(0);
             width: 350px; opacity: 0; transition: 1.2s ease-out; pointer-events: none; z-index: 10;
         }
 
         #secret-msg { 
-            display: none; font-size: 19px; line-height: 1.8; color: white; padding: 25px; 
+            display: none; font-size: 19px; line-height: 1.8; color: white; padding: 20px; 
             border-radius: 20px; background: rgba(255,255,255,0.05); border-right: 6px solid var(--gold);
             animation: fadeIn 1.5s forwards;
         }
@@ -73,7 +72,7 @@
 <body>
 
     <div class="stars-container" id="stars"></div>
-    <img src="https://upload.wikimedia.org/wikipedia/en/3/3e/Genie_Aladdin_Disney.png" class="genie">
+    <img src="https://files.catbox.moe/kuep5w" class="genie">
 
     <audio id="song">
         <source src="https://files.catbox.moe/3x0al8.mp3" type="audio/mpeg">
@@ -81,11 +80,10 @@
 
     <div class="container">
         <div id="login-screen" class="box">
-            <h2>عالم السحر والجمال ✨</h2>
-            <p>أدخل كلمة السر لفتح المصباح</p>
-            <input type="text" id="pass" placeholder="التاريخ المميز">
+            <h2 style="color:var(--sky)">سحر البدايات ✨</h2>
+            <input type="text" id="pass" placeholder="اكتب كلمة السر">
             <br>
-            <button onclick="start()">افتح يا سمسم</button>
+            <button onclick="start()">افتح المصباح</button>
         </div>
 
         <div id="main-content" class="box">
@@ -99,27 +97,27 @@
             </div>
 
             <div class="lamp-area" id="rub-area" onmousemove="doRub()" ontouchmove="doRub()">
-                <img src="https://static.wikia.nocookie.net/disneyarabic/images/4/4b/Genie%27s_Lamp.png" class="lamp-img" id="lamp">
+                <img src="https://files.catbox.moe/1puhwd" class="lamp-img" id="lamp">
                 <img src="https://www.pngmart.com/files/15/Smoke-Transparent-Background.png" class="smoke-effect" id="smoke">
-                <p id="hint" style="color:var(--gold); margin-top: 15px;">ادعك المصباح ليتحقق مرادك 🧞‍♂️</p>
+                <p id="hint" style="color:var(--gold); margin-top: 10px; font-size: 14px;">ادعك المصباح ليظهر الجني! 🧞‍♂️</p>
             </div>
 
             <div id="secret-msg">
                 <b>رسالة الجني السحرية ❤️</b><br>
-                كل سنة وأنتي أجمل مفاجأة في حياتي.. الفانوس ده مكنش هيفتح إلا بيكي.. رمضان أحلى بوجودك يا ست البنات!
+                كل سنة وأنتي أجمل حاجة حصلتلي.. المصباح ده مكنش هيفتح إلا ليكي أنتي بس. رمضان أحلى بوجودك!
             </div>
         </div>
     </div>
 
     <script>
-        // إنشاء النجوم المتساقطة
+        // توليد مطر النجوم
         const starsBox = document.getElementById('stars');
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 100; i++) {
             let star = document.createElement('div');
             star.className = 'star';
             star.style.left = Math.random() * 100 + 'vw';
-            star.style.width = star.style.height = Math.random() * 4 + 'px';
-            star.style.animationDuration = Math.random() * 3 + 2 + 's';
+            star.style.width = star.style.height = Math.random() * 3 + 'px';
+            star.style.animationDuration = Math.random() * 2 + 2 + 's';
             star.style.animationDelay = Math.random() * 5 + 's';
             starsBox.appendChild(star);
         }
@@ -131,20 +129,17 @@
         function start() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
-            song.play().catch(() => {
-                // للتعامل مع سياسة التشغيل التلقائي في المتصفحات
-                document.addEventListener('click', () => song.play(), {once: true});
-            });
+            song.play();
             showLyrics();
         }
 
         function showLyrics() {
-            const sequence = [1000, 5000, 9500, 13500, 18000, 22000];
+            // توقيت كلمات تامر عاشور المظبوط
+            const sequence = [1000, 5000, 9000, 13000, 17000, 21000];
             sequence.forEach((ms, index) => {
                 setTimeout(() => {
                     document.querySelectorAll('.lyric-line').forEach(l => l.classList.remove('active'));
-                    const currentLine = document.getElementById('l' + (index + 1));
-                    if(currentLine) currentLine.classList.add('active');
+                    document.getElementById('l' + (index + 1)).classList.add('active');
                 }, ms);
             });
         }
@@ -153,22 +148,19 @@
             if(isDone) return;
             rubs++;
             const lamp = document.getElementById('lamp');
-            // تأثير الاهتزاز عند الدعك
-            lamp.style.transform = `scale(1.05) rotate(${rubs % 2 === 0 ? 3 : -3}deg)`;
+            // اهتزاز الفانوس عند الدعك
+            lamp.style.transform = `scale(1.1) rotate(${rubs % 2 === 0 ? 5 : -5}deg)`;
             
-            if(rubs > 45) { // عدد مرات الدعك المطلوبة
+            if(rubs > 50) {
                 isDone = true;
                 const smoke = document.getElementById('smoke');
                 smoke.style.opacity = '1';
-                smoke.style.transform = 'translateX(-50%) scale(3.5)';
+                smoke.style.transform = 'translateX(-50%) scale(4)';
                 
                 setTimeout(() => {
-                    document.getElementById('rub-area').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('rub-area').style.display = 'none';
-                        document.getElementById('secret-msg').style.display = 'block';
-                    }, 500);
-                }, 1200);
+                    document.getElementById('rub-area').style.display = 'none';
+                    document.getElementById('secret-msg').style.display = 'block';
+                }, 1500);
             }
         }
     </script>
