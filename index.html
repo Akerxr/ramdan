@@ -6,15 +6,17 @@
     <title>Code of Love ✨</title>
     <style>
         :root { --magic-blue: #020617; --sky: #38bdf8; --gold: #ffd700; }
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
-            margin: 0; padding: 0; background: var(--magic-blue); 
-            font-family: 'Segoe UI', sans-serif; overflow: hidden; color: white;
+            background: var(--magic-blue); 
+            font-family: 'Segoe UI', sans-serif; 
+            overflow: hidden; 
             height: 100vh; width: 100vw;
+            color: white;
         }
 
-        /* مطر النجوم في الخلفية الثابتة */
+        /* النجوم */
         .stars-container {
             position: fixed; inset: 0; z-index: -1;
             background: radial-gradient(ellipse at bottom, #0f172a 0%, #020617 100%);
@@ -22,99 +24,79 @@
         .star { position: absolute; background: white; border-radius: 50%; opacity: 0.5; animation: fall linear infinite; }
         @keyframes fall { from { transform: translateY(-10vh); } to { transform: translateY(110vh); } }
 
-        /* تنسيق عام لكل "صفحة" */
-        .page {
-            position: fixed; inset: 0;
+        /* شاشة الدخان السحرية عند الانتقال */
+        #transition-smoke {
+            position: fixed; inset: 0; z-index: 1000;
+            background: url('https://www.pngarts.com/files/4/Smoke-PNG-Transparent-Image.png') center/cover no-repeat;
+            opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+            filter: brightness(2);
+        }
+
+        .screen {
+            position: absolute; inset: 0;
             display: flex; flex-direction: column;
             justify-content: center; align-items: center;
-            transition: opacity 0.8s ease, visibility 0.8s;
-            padding: 20px;
         }
 
         /* 1. صفحة الباسورد */
-        #login-screen { z-index: 100; visibility: visible; opacity: 1; }
-        #login-screen.hidden { opacity: 0; visibility: hidden; }
-
-        .card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 30px;
-            padding: 40px 20px;
-            width: 90%;
-            max-width: 350px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        #login-screen { z-index: 20; }
+        .login-card {
+            width: 85%; padding: 30px; border-radius: 25px;
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(15px);
+            border: 1px solid var(--sky); text-align: center;
         }
-
         input {
             width: 100%; padding: 15px; margin: 20px 0; border-radius: 12px;
             border: 1px solid var(--sky); background: rgba(255,255,255,0.1);
             color: white; text-align: center; font-size: 18px; outline: none;
         }
-
         button {
             width: 100%; padding: 15px; border-radius: 12px; border: none;
             background: var(--sky); color: white; font-weight: bold; font-size: 18px;
-            cursor: pointer; box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
         }
 
         /* 2. صفحة المصباح */
-        #main-content { z-index: 50; visibility: hidden; opacity: 0; }
-        #main-content.visible { visibility: visible; opacity: 1; }
+        #main-screen { z-index: 10; display: none; opacity: 0; transition: opacity 1s ease; }
 
-        /* الجني الطائر */
-        .genie {
-            width: 180px; margin-bottom: 20px;
-            filter: drop-shadow(0 0 15px var(--sky));
-            animation: float 4s ease-in-out infinite;
-        }
-        @keyframes float { 0%, 100% { transform: translateY(0) rotate(3deg); } 50% { transform: translateY(-25px) rotate(-3deg); } }
+        .genie { width: 160px; filter: drop-shadow(0 0 10px var(--sky)); animation: float 3s infinite ease-in-out; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-        /* الكلمات */
-        .lyrics-box { height: 60px; margin: 20px 0; width: 100%; text-align: center; }
-        .lyric-line { font-size: 20px; font-weight: bold; color: var(--sky); text-shadow: 0 0 10px var(--sky); display: none; }
-        .lyric-line.active { display: block; animation: zoomIn 0.8s forwards; }
-
-        /* المصباح */
-        .lamp-container { position: relative; width: 220px; cursor: pointer; touch-action: none; }
-        .lamp-img { width: 100%; filter: drop-shadow(0 15px 25px rgba(0,0,0,0.8)); transition: 0.2s; }
+        .lamp-box { position: relative; width: 220px; margin-top: 30px; cursor: pointer; touch-action: none; }
+        .lamp-img { width: 100%; filter: drop-shadow(0 10px 20px black); }
         
-        #smoke {
-            position: absolute; top: 0%; left: 50%; transform: translate(-50%, -50%) scale(0);
-            width: 400px; opacity: 0; transition: 1.5s ease; pointer-events: none;
+        /* دخان المصباح */
+        #lamp-smoke {
+            position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%) scale(0);
+            width: 300px; opacity: 0; transition: 1s ease;
         }
 
-        #secret-msg {
-            display: none; width: 90%; max-width: 350px; padding: 25px; 
-            background: rgba(255, 255, 255, 0.05); border-radius: 20px;
-            border-right: 5px solid var(--gold); line-height: 1.8; text-align: center;
-        }
+        .lyric-line { font-size: 20px; font-weight: bold; color: var(--sky); display: none; margin-bottom: 20px; text-align: center; }
+        .lyric-line.active { display: block; animation: fadeIn 0.5s; }
 
-        @keyframes zoomIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
+        #secret-msg { display: none; width: 85%; padding: 25px; background: rgba(255,255,255,0.1); border-radius: 20px; text-align: center; border-right: 5px solid var(--gold); }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <div class="stars-container" id="stars"></div>
+    <div id="transition-smoke"></div>
     
-    <audio id="song" loop>
-        <source src="https://files.catbox.moe/3x0al8.mp3" type="audio/mpeg">
-    </audio>
+    <audio id="song" loop><source src="https://files.catbox.moe/3x0al8.mp3"></audio>
 
-    <div id="login-screen" class="page">
-        <div class="card">
-            <h2 style="color:var(--sky); margin:0;">Code of Love</h2>
-            <p style="opacity: 0.7; font-size: 14px;">أدخل الباسورد لفتح المفاجأة</p>
-            <input type="text" id="pass" placeholder="Password">
-            <button onclick="unlock()">فتح المصباح ✨</button>
+    <div id="login-screen" class="screen">
+        <div class="login-card">
+            <h1 style="color:var(--sky); margin-bottom:10px;">Code of Love</h1>
+            <input type="text" id="passInput" placeholder="كلمة السر">
+            <button onclick="magicEntry()">دخول سحري ✨</button>
         </div>
     </div>
 
-    <div id="main-content" class="page">
+    <div id="main-screen" class="screen">
         <img src="https://files.catbox.moe/z9lpmv.png" class="genie">
         
-        <div class="lyrics-box">
+        <div id="lyrics-container">
             <span id="l1" class="lyric-line">ورجعيني لحلاوه البدايات</span>
             <span id="l2" class="lyric-line">نعيد ونزود الحكايات</span>
             <span id="l3" class="lyric-line">واشوفها واقفه قدامي</span>
@@ -123,48 +105,60 @@
             <span id="l6" class="lyric-line">واخدها في حضني من تاني</span>
         </div>
 
-        <div class="lamp-container" id="lamp-box" ontouchmove="doRub()">
-            <img src="https://files.catbox.moe/898v62.png" id="lamp" class="lamp-img">
-            <img src="https://www.pngarts.com/files/4/Smoke-PNG-Transparent-Image.png" id="smoke">
-            <p id="hint" style="color:var(--gold); font-size: 14px; margin-top: 10px;">ادعك المصباح بقوة 🧞‍♂️</p>
+        <div class="lamp-box" ontouchmove="handleRub()">
+            <img src="https://files.catbox.moe/898v62.png" id="lamp-img" class="lamp-img">
+            <img src="https://www.pngarts.com/files/4/Smoke-PNG-Transparent-Image.png" id="lamp-smoke">
+            <p id="hint" style="color:var(--gold); font-size:12px; margin-top:10px; text-align:center;">ادعك المصباح بصباعك 🧞‍♂️</p>
         </div>
 
-        <div id="secret-msg">
-            <b>رسالة الجني ❤️</b><br>
-            كل سنة وأنتي منورة دنيتي.. رمضان والعيد أحلى بكتير وأنتي في حياتي. بحبك!
-        </div>
+        <div id="secret-msg">كل سنة وأنتي أجمل حاجة في حياتي ❤️</div>
     </div>
 
     <script>
-        // توليد النجوم
-        for (let i = 0; i < 50; i++) {
+        // نجوم الخلفية
+        for (let i = 0; i < 40; i++) {
             let s = document.createElement('div');
             s.className = 'star';
             s.style.left = Math.random() * 100 + 'vw';
-            s.style.width = s.style.height = Math.random() * 3 + 'px';
-            s.style.animationDuration = Math.random() * 3 + 2 + 's';
+            s.style.width = s.style.height = Math.random() * 2 + 'px';
+            s.style.animationDuration = Math.random() * 2 + 2 + 's';
             document.getElementById('stars').appendChild(s);
         }
 
-        const song = document.getElementById('song');
-        let rubs = 0;
-        let isDone = false;
+        function magicEntry() {
+            const pass = document.getElementById('passInput').value;
+            if(pass === "") { alert("اكتب كلمة السر يا بطل"); return; }
 
-        function unlock() {
-            document.getElementById('login-screen').classList.add('hidden');
-            const main = document.getElementById('main-content');
-            main.classList.add('visible');
-            song.play();
-            startLyrics();
+            const transSmoke = document.getElementById('transition-smoke');
+            const login = document.getElementById('login-screen');
+            const main = document.getElementById('main-screen');
+
+            // 1. يظهر الدخان يغطي الشاشة
+            transSmoke.style.opacity = '1';
+
+            setTimeout(() => {
+                // 2. نخفي شاشة الباسورد ونظهر الرئيسية وهي لسه مستخبية ورا الدخان
+                login.style.display = 'none';
+                main.style.display = 'flex';
+                
+                setTimeout(() => {
+                    // 3. نشيل الدخان تدريجياً ونظهر الصفحة التانية
+                    transSmoke.style.opacity = '0';
+                    main.style.opacity = '1';
+                    document.getElementById('song').play();
+                    startLyrics();
+                }, 500);
+            }, 600);
         }
 
         function startLyrics() {
-            const times = [1000, 5000, 9500, 13500, 18000, 22500];
+            const times = [1000, 5000, 9500, 13500, 18000, 22000];
             const run = () => {
                 times.forEach((ms, i) => {
                     setTimeout(() => {
                         document.querySelectorAll('.lyric-line').forEach(l => l.classList.remove('active'));
-                        document.getElementById('l' + (i + 1)).classList.add('active');
+                        const line = document.getElementById('l' + (i+1));
+                        if(line) line.classList.add('active');
                     }, ms);
                 });
             };
@@ -172,21 +166,23 @@
             setInterval(run, 26000);
         }
 
-        function doRub() {
-            if(isDone) return;
+        let rubs = 0;
+        let finished = false;
+        function handleRub() {
+            if(finished) return;
             rubs++;
-            const lamp = document.getElementById('lamp');
-            lamp.style.transform = `scale(1.05) rotate(${rubs % 2 === 0 ? 5 : -5}deg)`;
-
-            if(rubs > 40) {
-                isDone = true;
-                const smoke = document.getElementById('smoke');
+            const lamp = document.getElementById('lamp-img');
+            lamp.style.transform = `scale(1.1) rotate(${rubs % 2 === 0 ? 5 : -5}deg)`;
+            
+            if(rubs > 30) {
+                finished = true;
+                const smoke = document.getElementById('lamp-smoke');
                 smoke.style.opacity = '1';
-                smoke.style.transform = 'translate(-50%, -50%) scale(1.5)';
+                smoke.style.transform = 'translate(-50%, -50%) scale(2)';
                 setTimeout(() => {
-                    document.getElementById('lamp-box').style.display = 'none';
+                    document.getElementById('lamp-img').parentElement.style.display = 'none';
                     document.getElementById('secret-msg').style.display = 'block';
-                }, 1200);
+                }, 1000);
             }
         }
     </script>
