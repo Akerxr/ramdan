@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فانوس الذكريات السحري ✨</title>
+    <style>
+        :root { --magic-blue: #0f172a; --gold: #ffd700; --light-blue: #38bdf8; }
+        
+        body { 
+            margin: 0; padding: 0; background: var(--magic-blue); 
+            font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; color: white;
+            cursor: crosshair;
+        }
+
+        /* جني علاء الدين المتحرك */
+        .genie-bg {
+            position: fixed; top: 15%; left: -150px; width: 200px; opacity: 0.3;
+            z-index: -1; animation: fly 12s linear infinite;
+        }
+        @keyframes fly {
+            0% { left: -150px; transform: translateY(0) rotate(10deg); }
+            50% { transform: translateY(-30px) rotate(-10deg); }
+            100% { left: 110%; transform: translateY(0) rotate(10deg); }
+        }
+
+        .container { display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .box { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); padding: 30px; border-radius: 30px; border: 1px solid rgba(255, 215, 0, 0.3); text-align: center; width: 100%; max-width: 420px; position: relative; }
+
+        /* شاشة الدخول */
+        #login-screen input { padding: 12px; border-radius: 12px; border: 1px solid var(--gold); width: 85%; margin: 15px 0; font-size: 18px; text-align: center; background: rgba(255,255,255,0.1); color: white; outline: none; }
+        #login-screen button { background: var(--gold); color: #000; border: none; padding: 12px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 18px; box-shadow: 0 0 15px var(--gold); }
+
+        #main-content { display: none; }
+
+        /* العداد التنازلي للعيد */
+        .eid-timer { font-size: 14px; color: var(--gold); margin-bottom: 20px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; border: 1px dashed var(--gold); }
+
+        /* الكلمات */
+        .lyrics { margin: 20px 0; font-size: 22px; font-weight: bold; min-height: 100px; }
+        .lyric-line { color: #555; transition: 0.8s; display: block; margin: 8px 0; opacity: 0.3; }
+        .lyric-line.active { color: var(--light-blue); opacity: 1; transform: scale(1.1); text-shadow: 0 0 15px var(--light-blue); }
+
+        /* الفانوس والدخان */
+        .lamp-box { position: relative; margin: 30px auto; width: 180px; touch-action: none; }
+        .lamp-img { width: 100%; transition: 0.4s; filter: drop-shadow(0 0 10px rgba(255,215,0,0.2)); }
+        .lamp-img.glow { filter: drop-shadow(0 0 30px var(--gold)); transform: rotate(5deg); }
+        
+        #smoke { 
+            position: absolute; top: -50px; left: 50%; transform: translateX(-50%);
+            width: 100px; opacity: 0; transition: 2s; pointer-events: none;
+        }
+
+        /* الرسالة السرية */
+        #secret-message { 
+            display: none; background: linear-gradient(135deg, #fff, #f0f0f0); color: #1a1a1a; 
+            padding: 25px; border-radius: 20px; margin-top: 20px; font-size: 17px;
+            line-height: 1.8; border-right: 8px solid var(--gold); animation: slideUp 1.5s ease-out;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        @keyframes slideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* النجوم المتساقطة */
+        .star { position: fixed; pointer-events: none; animation: star-fade 1.5s forwards; z-index: 9999; }
+        @keyframes star-fade { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: translateY(50px) scale(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="genie-bg"><img src="https://img.icons8.com/color/512/genie-lamp.png" width="150"></div>
+
+    <audio id="love-song" loop>
+        <source src="https://files.catbox.moe/3x0al8.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="container">
+        <div id="login-screen" class="box">
+            <h1 style="color: var(--gold); font-size: 28px;">سحر رمضان 🌙</h1>
+            <p>اكتب التاريخ المميز بيننا لفتح الفانوس</p>
+            <input type="text" id="pass" placeholder="00-00-0000">
+            <br>
+            <button onclick="unlock()">افتح يا سمسم ✨</button>
+        </div>
+
+        <div id="main-content" class="box">
+            <div class="eid-timer" id="countdown">جاري حساب موعد العيد...</div>
+
+            <div class="lyrics">
+                <span id="l1" class="lyric-line">ورجعيني لحلاوه البدايات</span>
+                <span id="l2" class="lyric-line">نعيد ونزود الحكايات</span>
+                <span id="l3" class="lyric-line">واشوفها واقفه قدامي</span>
+            </div>
+
+            <div class="lamp-box" id="rub-area" onmousemove="rub(event)" ontouchmove="rub(event)">
+                <img src="https://cdn-icons-png.flaticon.com/512/3234/3234714.png" class="lamp-img" id="lamp">
+                <img src="https://www.pngmart.com/files/15/Smoke-Transparent-Background.png" id="smoke">
+                <p id="rub-hint" style="color: var(--gold); font-size: 13px; margin-top: 10px;">ادعكي الفانوس بقوة ليخرج الجني! ✨</p>
+            </div>
+
+            <div id="secret-message">
+                <b>يا نور عيني ❤️</b><br>
+                كل سنة وأنتي منورة دنيتي، بمناسبة رمضان والعيد حبيت أقولك إنك أجمل حاجة حصلت في حياتي. الفانوس ده مش بس زينة، ده شايل جواه كل ذكرياتنا.. بحبك!
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const song = document.getElementById('love-song');
+        let rubCount = 0;
+        let isRubbed = false;
+
+        // 1. تأثير النجوم المتساقطة خلف الماوس/اللمس
+        function createStar(x, y) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.innerHTML = '✨';
+            star.style.left = x + 'px';
+            star.style.top = y + 'px';
+            star.style.fontSize = Math.random() * 20 + 10 + 'px';
+            document.body.appendChild(star);
+            setTimeout(() => star.remove(), 1500);
+        }
+
+        document.addEventListener('mousemove', (e) => createStar(e.clientX, e.clientY));
+        document.addEventListener('touchmove', (e) => createStar(e.touches[0].clientX, e.touches[0].clientY));
+
+        function unlock() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+            song.play();
+            startLyrics();
+            startEidTimer();
+        }
+
+        function startLyrics() {
+            setTimeout(() => document.getElementById('l1').classList.add('active'), 1000);
+            setTimeout(() => document.getElementById('l2').classList.add('active'), 5000);
+            setTimeout(() => document.getElementById('l3').classList.add('active'), 9000);
+        }
+
+        // 2. ميزة دعك الفانوس مع الدخان
+        function rub(e) {
+            if(isRubbed) return;
+            rubCount++;
+            const lamp = document.getElementById('lamp');
+            lamp.classList.add('glow');
+            
+            if(rubCount > 60) {
+                isRubbed = true;
+                const smoke = document.getElementById('smoke');
+                smoke.style.opacity = '1';
+                smoke.style.transform = 'translateX(-50%) scale(3)';
+                
+                setTimeout(() => {
+                    smoke.style.opacity = '0';
+                    lamp.style.display = 'none';
+                    document.getElementById('rub-hint').style.display = 'none';
+                    document.getElementById('secret-message').style.display = 'block';
+                }, 1500);
+            }
+            setTimeout(() => lamp.classList.remove('glow'), 300);
+        }
+
+        // 3. عداد تنازلي للعيد (مثال: عيد الفطر 30 مارس 2025 - عدله براحتك)
+        function startEidTimer() {
+            const eidDate = new Date("March 30, 2025 00:00:00").getTime();
+            setInterval(() => {
+                const now = new Date().getTime();
+                const diff = eidDate - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                document.getElementById('countdown').innerHTML = `🌙 متبقي على العيد: ${days} يوم و ${hours} ساعة`;
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
